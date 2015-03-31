@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# as per listing 6.29, to address a uniqueness constraint issue in the
+# fixtures, which is preventing our automatic software suite from
+# passing, we commented this out and leave it empty for now until later
+
+#one:
+#  name: MyString
+#  email: MyString
+
+#two:
+#  name: MyString
+#  email: MyString
