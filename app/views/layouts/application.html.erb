@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<!--this line dynamically change the title of the page based
+			on the provide tag in the beginning of the views-->
 		<title><%= full_title(yield(:title)) %></title>
 		<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
 		<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 		<%= csrf_meta_tags %>
+		<!--this render clause swap this part out for _shim.html.erb-->
 		<%= render 'layouts/shim' %>
 	</head>
 	<body>
+		<!--this render clause swap this part out for _header.html.erb-->
 		<%= render 'layouts/header' %>
 		<div class="container">
+			<!--this yield swap out for the views in static pages-->
 			<%= yield %>
+			<!--this render clause swap this part out for _footer.html.erb-->
 			<%= render 'layouts/footer' %>
+			<!--this line is added in section 7.1.1; it is a build-in method
+				used to display debug informations only during development-->
+				<%= debug(params) if Rails.env.development? %>
 		</div>
 	</body>
 </html>
