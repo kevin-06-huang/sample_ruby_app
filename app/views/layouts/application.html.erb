@@ -13,7 +13,14 @@
 	<body>
 		<!--this render clause swap this part out for _header.html.erb-->
 		<%= render 'layouts/header' %>
+		<!--this renders the flash message if one is available;
+			check listing 7.25-->
 		<div class="container">
+			<% flash.each do |message_type, message| %>
+				<div class="alert alert-<%= message_type %>">
+					<%= message %>
+				</div>
+			<% end %>
 			<!--this yield swap out for the views in static pages-->
 			<%= yield %>
 			<!--this render clause swap this part out for _footer.html.erb-->
