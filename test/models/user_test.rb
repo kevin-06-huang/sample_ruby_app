@@ -85,4 +85,11 @@ class UserTest < ActiveSupport::TestCase
     @user.password = @user.password_confirmation = "2" * 5
     assert_not @user.valid?
   end
+  # this is added in 8.4.4, listing 8.43 to test for the issue with having
+  # multiple windows open and having the remember_digest alter by one
+  # window; specifically the authenticated? helper method we wrote in user
+  # in model should return false for a user with nil remember digest
+  test "authenticated? should return false for a user with nil digest" do
+    assert_not @user.authenticated?('')
+  end
 end

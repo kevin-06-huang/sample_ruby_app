@@ -195,6 +195,22 @@ input, textarea, select, .uneditable-input {
 input {
   height: auto !important;
 }
+
+/* this part is added in 8.4.5 from listing 8.48 */
+.checkbox {
+  margin-top: -10px;
+  margin-bottom: 10px;
+  span {
+    margin-left: 20px;
+    font-weight: normal;
+  }
+}
+
+#session_remember_me {
+  width: auto;
+  margin-left: 0;
+}
+
 /* this is added in listing 7.20 to style the automatically generated
  * error messages */
 #error_explanation {

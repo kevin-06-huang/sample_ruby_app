@@ -12,5 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+// added from listing 8.17
+//= require bootstrap
 //= require turbolinks
 //= require_tree .

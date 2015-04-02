@@ -27,6 +27,11 @@ class UsersController < ApplicationController
     # method user_params at bottom of class
     @user = User.new(user_params)
     if @user.save
+      # added in 8.2.5, listing 8.22; just a minor tweak so that login
+      # is automatic upon successful signing up; log_in is a helper
+      # method defined in sessionshelper that is available to all
+      # controllers
+      log_in @user
       # this is added in 7.4.2; just a nice to have polish common in
       # web applications, a message that appears in the subsequent
       # page but disappears upon visiting another page or reloading

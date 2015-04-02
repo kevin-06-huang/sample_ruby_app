@@ -39,5 +39,9 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     # this one line will check the Users routes, the Users show action
     # and the show.html.erb view
     assert_template 'users/show'
+    # added in listing 8.24; makes use of the is_logged_in? test helper
+    # method that we defined in listing 8.23 and the test_helper.rb;
+    # simply test if the test user is logged in with valid information
+    assert is_logged_in?
   end
 end

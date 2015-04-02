@@ -1,6 +1,9 @@
 # this is generated with the following command
 # $ rails generate model User name:string email:string
 class User < ActiveRecord::Base
+  # added in 8.4.1 from listing 8.32, this line simply instantiate and set
+  # the remember_token to be accessible from outside the class
+  attr_accessor :remember_token
   # we pust this line in at listing 6.31, ensures email uniqueness before
   # save (again?)
   before_save { self.email = email.downcase }
@@ -45,4 +48,53 @@ class User < ActiveRecord::Base
   
   # and finally, checking for length of the password, per listing 6.39
   validates :password, length: { minimum: 6 }
+  
+  # this is a class method for computing the password_digest from bcrypt
+  # there are several places where this method can be placed, but since
+  # later on we'll be reusing this method in the user model, this suggest
+  # that we place the method here in User model, and since we won't
+  # necessarily have access to a user object when we're using this method
+  # we have to make it a class method
+  # added from listing 8.18, returns the hash digest of the given string
+  # and set the cost to be low for testing but normal for production
+  def User.digest(string)
+    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+                                                  BCrypt::Engine.cost
+    BCrypt::Password.create(string, cost: cost)
+  end
+  # added in 8.4.1 from listing 8.31, we simply added a method for making
+  # tokens for use in remember_digest. similar to the digest method above,
+  # because we would like to use the method without a user object, we make
+  # this a class method as well
+  # returns a random token
+  def User.new_token
+    # this is a method from the SecureRandom module in the Ruby standard
+    # library that returns a random string of length 22 composed of the
+    # characters A-Z, a-z, 0-9, and "-" and "_"
+    SecureRandom.urlsafe_base64
+  end
+  # remembers a user in the database for use in persistent sessions
+  def remember
+    # the self is there to ensure assignment sets the user's remember_token
+    # as its instance variable, instead of creating a local variable called
+    # remember_token
+    self.remember_token = User.new_token
+    update_attribute(:remember_digest, User.digest(remember_token))
+  end
+  # from 8.4.2, listing 8.33; this is simply a method similar to the
+  # authenticate method in bcrypt, which compare the password_digest in
+  # database and as generated to authenticate user
+  # returns true if the given token 
+  def authenticated?(remember_token)
+    #listing 8.45, updating authenticated? to handle a nil remember digest
+    return false if remember_digest.nil?
+    
+    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+  end
+  # added in 8.4.3, from listing 8.38, this undo the remember method so
+  # user can be forgotten and therefore logout; specifically it sets the
+  # password_digest value to nil
+  def forget
+    update_attribute(:remember_digest, nil)
+  end
 end

@@ -11,3 +11,15 @@
 #two:
 #  name: MyString
 #  email: MyString
+# as per listing 8.19, after we've defined a class method for computing
+# password_digest from password, we now define a fixture for placement
+# in the database for testing user login; also note that fixtures allow
+# the use of embedded ruby
+test:
+  name: Test
+  email: test@example.com
+  password_digest: <%= User.digest('foobar') %>
+# a fixture is retrieved and used inside a test as follows:
+# user = users(:test)
+# here, users is the filename of the yml, and :test references the key
+# in the fixture above
