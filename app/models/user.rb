@@ -80,6 +80,7 @@ class User < ActiveRecord::Base
     # remember_token
     self.remember_token = User.new_token
     update_attribute(:remember_digest, User.digest(remember_token))
+    
   end
   # from 8.4.2, listing 8.33; this is simply a method similar to the
   # authenticate method in bcrypt, which compare the password_digest in

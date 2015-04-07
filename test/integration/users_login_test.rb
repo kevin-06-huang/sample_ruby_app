@@ -74,11 +74,14 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
   # symbols as keys inside tests (prob a bug), and that is why here we have
   # written them with string keys instead
   
-  # this test is failing, i don't know why
-# test "login with remembering" do
-#   log_in_as(@user, remember_me: '1')
-#   assert_not_nil cookies['remember_token']
-# end
+  # i've figured it out, there is a bug with the assertion, it's testing the
+  # assertion after the second log_in_as was executed, not before, if the
+  # tests are run individually they passed, it's only when they are run
+  # together that the first one failed
+  test "login with remembering" do
+    log_in_as(@user, remember_me: '1')
+    assert_not_nil cookies['remember_token']
+  end
 
   test "login without remembering" do
     log_in_as(@user, remember_me: '0')

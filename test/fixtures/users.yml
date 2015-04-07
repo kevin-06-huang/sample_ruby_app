@@ -18,7 +18,7 @@
 test:
   name: Test
   email: test@example.com
-  password_digest: <%= User.digest('foobar') %>
+  password_digest: <%= User.digest('password') %>
 # a fixture is retrieved and used inside a test as follows:
 # user = users(:test)
 # here, users is the filename of the yml, and :test references the key
