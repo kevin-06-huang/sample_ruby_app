@@ -1,0 +1,25 @@
+<!-- this is added in section 9.1.1, listing 9.2, whereby we added an user
+	edit view -->
+<% provide(:title, "Edit user") %>
+<h1>Update your profile</h1>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+  	<!-- refactored into a partial from listing 9.2 -->
+  	<!-- also take note, in the HTML for the edit form the HTML method
+  		used is POST, with a hidden input field that turns it into a PATCH
+  		request, since browsers can't natively send PATCH requests-->
+  	<!-- also, rails figure out that the form_for method is a POST for new
+  		users and a PATCH for editing existing users because there is a
+  		active record method new_record? that returns true if the user is
+  		new and false otherwise; form_for simply check the value of
+  		@user.new_record? and uses POST for true and PATCH for false -->
+    <%= render 'layouts/form' %>
+    <div class="gravatar_edit">
+      <%= gravatar_for @user %>
+      <!-- the target=_blank get the browser to open the page in a new
+      	window or tab, which is convenient for third-party sites -->
+      <a href="http://gravatar.com/emails" target=_blank>change</a>
+    </div>
+  </div>
+</div>

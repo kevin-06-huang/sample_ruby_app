@@ -47,7 +47,13 @@ class User < ActiveRecord::Base
   has_secure_password
   
   # and finally, checking for length of the password, per listing 6.39
-  validates :password, length: { minimum: 6 }
+  
+  # also, allow_blank: true is added in listing 9.10, to allow for a blank
+  # password field when user is editing information and doesn't want to
+  # change his password. has_secure_password automatically enforces
+  # the presence of a password when a new account is created so no empty
+  # password will be allowed in the user signup process
+  validates :password, length: { minimum: 6 }, allow_blank: true
   
   # this is a class method for computing the password_digest from bcrypt
   # there are several places where this method can be placed, but since
