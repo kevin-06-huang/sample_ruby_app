@@ -24,4 +24,10 @@ Rails.application.routes.draw do
   resources :users
   # we can see a full list of the routes for the applications, including
   # the named routes, using $ bundle exec rake routes
+  
+  # added in listing 10.1, we use the standard REST URL for
+  # account_activations; since account_activation requires the edit action
+  # but only the edit action we included the only: so that only the edit
+  # named route would be included
+  resources :account_activations, only: [:edit]
 end

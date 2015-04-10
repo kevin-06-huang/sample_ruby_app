@@ -19,7 +19,11 @@ User.create!(name:  "Kevin Huang",
              email: "kevincrazykid@gmail.com",
              password: "password",
              password_confirmation: "password",
-             admin: true)
+             admin: true,
+             # this part is added in listing 10.4 in order to initialize
+             # the sample and test user in an activated state
+             activated: true,
+             activated_at: Time.zone.now)
              
 99.times do |n|
   name  = Faker::Name.name
@@ -28,7 +32,11 @@ User.create!(name:  "Kevin Huang",
   User.create!(name: name,
                email: email,
                password: password,
-               password_confirmation: password)
+               password_confirmation: password,
+               # likewise this part is added in listing 10.4 in order to
+               # initialize the user in an activated state
+               activated: true,
+               activated_at: Time.zone.now)
 end
 
 # to seed our database, we type in the following command:

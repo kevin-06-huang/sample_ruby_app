@@ -3,10 +3,26 @@
 class User < ActiveRecord::Base
   # added in 8.4.1 from listing 8.32, this line simply instantiate and set
   # the remember_token to be accessible from outside the class
-  attr_accessor :remember_token
+  # we also added :activation_token to attr_accessor in listing 10.3
+  attr_accessor :remember_token, :activation_token
+    
   # we pust this line in at listing 6.31, ensures email uniqueness before
-  # save (again?)
-  before_save { self.email = email.downcase }
+  # save
+# before_save { self.email = email.downcase }
+
+  # this is added from listing 10.3; commenting out the previous line,
+  # method reference is used instead. Method reference is generally
+  # preferred
+  before_save :downcase_email
+  # this is also added from listing 10.3; note the different method call
+  # from before_save; this is because we want to create an
+  # activation_digest before a user is created, since each newly signed-up
+  # user will require activation. If we used before_save, the callback
+  # will happen before the object is saved, which includes both creation
+  # and update, but for activation we only want the callback to happen
+  # when a user is created
+  before_create :create_activation_digest
+  
   # this line is put in in section 6.8 to validates for the presence
   # of a name
   
@@ -68,6 +84,7 @@ class User < ActiveRecord::Base
                                                   BCrypt::Engine.cost
     BCrypt::Password.create(string, cost: cost)
   end
+  
   # added in 8.4.1 from listing 8.31, we simply added a method for making
   # tokens for use in remember_digest. similar to the digest method above,
   # because we would like to use the method without a user object, we make
@@ -79,6 +96,7 @@ class User < ActiveRecord::Base
     # characters A-Z, a-z, 0-9, and "-" and "_"
     SecureRandom.urlsafe_base64
   end
+  
   # remembers a user in the database for use in persistent sessions
   def remember
     # the self is there to ensure assignment sets the user's remember_token
@@ -86,8 +104,8 @@ class User < ActiveRecord::Base
     # remember_token
     self.remember_token = User.new_token
     update_attribute(:remember_digest, User.digest(remember_token))
-    
   end
+  
   # from 8.4.2, listing 8.33; this is simply a method similar to the
   # authenticate method in bcrypt, which compare the password_digest in
   # database and as generated to authenticate user
@@ -98,10 +116,31 @@ class User < ActiveRecord::Base
     
     BCrypt::Password.new(remember_digest).is_password?(remember_token)
   end
+  
   # added in 8.4.3, from listing 8.38, this undo the remember method so
   # user can be forgotten and therefore logout; specifically it sets the
   # password_digest value to nil
   def forget
     update_attribute(:remember_digest, nil)
+  end
+  
+  # added from listing 10.3, these are private method only in use within
+  # the User model; the method reference is at the top
+  # converts email to all lower-case
+  def downcase_email
+    self.email = email.downcase
+  end
+  
+  # creates and assigns the activation token and digest
+  def create_activation_digest
+    # remember User.new_token is a class method we defined above
+    self.activation_token = User.new_token
+    # activation_digest is part of the User model now so it is saved
+    # automatically when the user is saved. Also remember, activation_token
+    # is now an accessible attribute due to the attr_accessor on top
+    # contrast this with remember method above, we don't use
+    # update_attribute because this is before user creation and therefore
+    # the user does not exist yet in the database
+    self.activation_digest = User.digest(activation_token)
   end
 end

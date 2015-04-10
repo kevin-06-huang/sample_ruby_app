@@ -1,0 +1,12 @@
+<!-- this is added from listing 10.12, 10.13, it is the email that is
+	sent out; notice that there is both a text and html based version -->
+<h1>Sample App</h1>
+
+<p>Hi <%= @user.name %>,</p>
+
+<p>
+Welcome to the Sample App! Click on the link below to activate your account:
+</p>
+
+<%= link_to "Activate", edit_account_activation_url(@user.activation_token,
+                                                    email: @user.email) %>

@@ -67,17 +67,24 @@ class UsersController < ApplicationController
       # is automatic upon successful signing up; log_in is a helper
       # method defined in sessionshelper that is available to all
       # controllers
-      log_in @user
+    # log_in @user
       # this is added in 7.4.2; just a nice to have polish common in
       # web applications, a message that appears in the subsequent
       # page but disappears upon visiting another page or reloading
       # this merely instantiate the flash[:success]; additional code
       # is required to actually display the flash messages
-      flash[:success] = "Welcome, #{@user.name}!"
+    # flash[:success] = "Welcome, #{@user.name}!"
       # listing 7.23
-      redirect_to @user
+    # redirect_to @user
       # actually should be redirect_to user_url(@user), but the previous
       # line is sufficient; rails automatically infers the rest
+      
+      # this is added in listing 10.21; we change the redirect_to to the
+      # root_url because now that the account require activation, we can
+      # no longer redirect directly to the @user profile
+      UserMailer.account_activation(@user).deliver_now
+      flash[:info] = "Please check your email to activate your account."
+      redirect_to root_url
     else
       render 'new'
     end

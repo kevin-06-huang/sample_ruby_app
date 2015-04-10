@@ -14,7 +14,18 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+# config.action_mailer.raise_delivery_errors = false
+  
+  # this part is added from listing 10.14, it is simply some configuration
+  # to our application's development environment that allows us to use
+  # email previews which are special urls exposed by rails to let us view
+  # our email messages. the default raise_delivery_errors is commented
+  # out above
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :test
+  host = 'localhost:3000' # local server
+  config.action_mailer.default_url_options = { host: host }
+  
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

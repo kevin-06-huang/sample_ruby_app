@@ -26,6 +26,10 @@ test:
 # user = users(:test)
 # here, users is the filename of the yml, and :test references the key
 # in the fixture above
+  # we add this part in listing 10.5 to activate fixture users, since we
+  # have added user activation
+  activated: true
+  activated_at: <%= Time.zone.now %>
 
 # this is added in 9.2.2, from listing 9.20; it is added to have a second
 # test user in order to test for certain actions such as edit requiring
@@ -34,6 +38,8 @@ test2:
   name: Test2
   email: test2@gmail.com
   password_digest: <%= User.digest('password') %>
+  activated: true
+  activated_at: <%= Time.zone.now %>
   
 # this is added in listing 9.43, and generates 30 extra users to fixture
 # to test pagination; a few extra named users are also defined for use in
@@ -42,25 +48,35 @@ michael:
   name: Michael Example
   email: michael@example.com
   password_digest: <%= User.digest('password') %>
+  activated: true
+  activated_at: <%= Time.zone.now %>
 
 archer:
   name: Sterling Archer
   email: duchess@example.gov
   password_digest: <%= User.digest('password') %>
+  activated: true
+  activated_at: <%= Time.zone.now %>
 
 lana:
   name: Lana Kane
   email: hands@example.gov
   password_digest: <%= User.digest('password') %>
+  activated: true
+  activated_at: <%= Time.zone.now %>
 
 mallory:
   name: Mallory Archer
   email: boss@example.gov
   password_digest: <%= User.digest('password') %>
+  activated: true
+  activated_at: <%= Time.zone.now %>
 
 <% 30.times do |n| %>
 user_<%= n %>:
   name:  <%= "User #{n}" %>
   email: <%= "user-#{n}@example.com" %>
   password_digest: <%= User.digest('password') %>
+  activated: true
+  activated_at: <%= Time.zone.now %>
 <% end %>
