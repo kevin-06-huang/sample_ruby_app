@@ -35,10 +35,18 @@ class UsersEditTest < ActionDispatch::IntegrationTest
   # successful edit.
   test "successful edit" do
     # added in listing 9.14
-    log_in_as(@user)
+  # log_in_as(@user)
     
+  # get edit_user_path(@user)
+  # assert_template "users/edit"
+    
+    # modified in listing 9.26, to test for friendly forwarding, ie,
+    # the app should redirect to the correct page user is trying to
+    # reach after user is prompt to log in
     get edit_user_path(@user)
-    assert_template "users/edit"
+    log_in_as(@user)
+    assert_redirected_to edit_user_path(@user)
+    
     name = "Foo Bar"
     email = "foo@bar.com"
     patch user_path(@user), user: { name: name,

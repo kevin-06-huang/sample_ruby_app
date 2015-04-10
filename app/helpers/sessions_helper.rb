@@ -13,6 +13,7 @@ module SessionsHelper
     # added to the base applicationcontroller class
     session[:user_id] = user.id
   end
+  
   # added in 8.4.2, listing 8.35
   # remembers a user in a persistent session; note that this is a different
   # method from the remember in user.rb of model, which remembers the user
@@ -33,6 +34,7 @@ module SessionsHelper
     cookies.permanent.signed[:user_id] = user.id
     cookies.permanent[:remember_token] = user.remember_token
   end
+  
   # added in 8.2.2, listing 8.14
   # returns the current logged-in user (if any)
   def current_user
@@ -75,18 +77,21 @@ module SessionsHelper
       end
     end
   end
+  
   # added in 8.2.3, listing 8.15
   # returns true if the user is logged in, ie, there is a current user
   # in the session, false otherwise
   def logged_in?
     !current_user.nil?
   end
+  
   # forgets a persistent session
   def forget(user)
     user.forget
     cookies.delete(:user_id)
     cookies.delete(:remember_token)
   end
+  
   # added in section 8.3 from listing 8.26; simply a logout helper
   # method not unlike the log_in method before
   # log out the current user
@@ -95,5 +100,40 @@ module SessionsHelper
     # added in 8.4.3, from listing 8.39
     session.delete(:user_id)
     @current_user = nil
+  end
+  
+  # this is added from listing 9.24; it is simply a refactoring to make
+  # the app conforms to industry convention. we added a simple helper
+  # method current_user? to see if the given user is the current user,
+  # using the current_user helper method we defined above which returns
+  # the current user
+  def current_user?(user)
+    user == current_user
+  end
+  
+  # redirect to stored location (or to the default if none are stored)
+  def redirect_back_or(default)
+    # remember session is a rail object with predefined attribute, one
+    # of which is :forwarding_url; we redirect to the stored location,
+    # unless none are stored, in which case we redirect to the desired
+    # default location passed in
+    # notice that session.delete is put after redirect; this is okay,
+    # because redirects doesn't happen until an explicit return or the
+    # end of the method, any code after the redirect is still executed
+    redirect_to(session[:forwarding_url] || default)
+    session.delete(:forwarding_url)
+  end
+  
+  # stores the url trying to be accessed in a session object in the
+  # forwarding_url attribute
+  def store_location
+    # we put the requested url in the session variable under
+    # forwarding_url, but only for a get request. This prevents storing
+    # the forwarding url if, for example, the user submits a form when
+    # not logged in; in such a case the forwarding_url would be stored,
+    # and redirect to the url would occurred, but since the url is
+    # actually looking for a post, patch or delete request, and redirect
+    # generates a get request, an error occured
+    session[:forwarding_url] = request.url if request.get?
   end
 end

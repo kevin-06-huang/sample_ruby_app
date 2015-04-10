@@ -26,9 +26,16 @@ class SessionsController < ApplicationController
     # end
       params[:session][:remember_me] == '1' ? remember(user) : forget(user)
       
-      redirect_to user
-      # redirect_to is automatically converted by rails into the route
-      # user_url(user)
+    # redirect_to user
+    
+      # added in listing 9.29 to replace the previous line, this makes
+      # use of the helper method we wrote in sessions_helper, and redirect
+      # to the page user is trying to access before prompt for a login;
+      # if there is no such page, the redirect happens to the default page
+      # which is passed into the helper method as a parameter
+      redirect_back_or user
+      # redirect_to user is automatically converted by rails into the
+      # route user_url(user)
     else
     # flash[:danger] = 'Invalid email/password combination'
       # this fixes the bug so that the flash message will now disappear

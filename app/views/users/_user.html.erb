@@ -1,0 +1,25 @@
+<!-- this partial is added in listing 9.47 to render a single user; when
+	used in conjunction with render @users (in index.html.erb in users)
+	rails will automatically infer its existence and use it to render
+	each user in the @users collection -->
+<li>
+  <%= gravatar_for user, size: 50 %>
+  <%= link_to user.name, user %>
+  <!-- we added the next part from listing 9.52, section 9.4.2; the
+  	resulting delete link is coded not to appear if the current user is
+  	not an admin -->
+  <% if current_user.admin? && !current_user?(user) %>
+    | <%= link_to "delete",
+			      user,
+                  method: :delete,
+                  data: { confirm: "Delete this user?" } %>
+                  <!-- note the method: :delete argument, which arranges
+                  	for the link to issue the necessary DELETE request -->
+                  <!-- also note that browsers cannot send DELETE request
+                  	natively, and Rails fake them with Javascript; the
+                  	above delete links won't work if the user has
+                  	Javascript disabled; for non-Javascript-enabled
+                  	browsers DELETE request can be faked using a form and
+                  	a POST request -->
+  <% end %>
+</li>

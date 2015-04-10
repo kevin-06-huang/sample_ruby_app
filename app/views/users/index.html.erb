@@ -1,0 +1,44 @@
+<!-- this is added from listing 9.34, and simply iterates through the
+	@users variable and display them in a unordered list container,
+	with each user in a list element -->
+<% provide(:title, 'All users') %>
+
+<h1>All users</h1>
+
+<!-- we add this in listing 9.41, and the will_paginate line correspond
+	to the actual pagination links -->
+<%= will_paginate %>
+
+<!-- in listing 9.48 we did a minor refactoring to make the code more
+	compact, to better make use of rails render method; calling render
+	directly on the @users variable cause rails to infer that @users is a
+	list of User objects, and that it is supposed to iterate through them
+	and render each with a partial _user.html.erb that we supplied in 
+	users view folder -->
+<ul class="users">
+  <%= render @users %>
+</ul>
+
+<!--
+<ul class="users">
+  <% @users.each do |user| %>
+    <li>
+      <%= gravatar_for user, size: 50 %>
+      <%= link_to user.name, user %>
+    </li>
+  <% end %>
+</ul>
+-->
+<!-- again added from listing 9.41, we want the pagination link to appear
+	both above and below the actual list -->
+<%= will_paginate %>
+<!-- the will_paginate method looks for an @users object inside a users
+	view and displays pagination links to access other page. Note that we
+	also have to modify the @users in index action of users controller
+	because will_paginate requires that the result is paginate explicitly
+	using the paginate method -->
+<!-- paginate takes a hash argument with key :page and value equal to the
+	page requested. Using the paginate and the :page parameter the users
+	are plled out in chunks (default is 30). if page is nil the first page
+	is returned. The page parameter is accessed with params[:page],
+	generated automatically by will_paginate -->

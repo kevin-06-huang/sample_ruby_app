@@ -19,7 +19,48 @@ test:
   name: Test
   email: test@example.com
   password_digest: <%= User.digest('password') %>
+  # added in 9.4.3 to make the first user an admin in order to test user
+  # destroy action
+  admin: true
 # a fixture is retrieved and used inside a test as follows:
 # user = users(:test)
 # here, users is the filename of the yml, and :test references the key
 # in the fixture above
+
+# this is added in 9.2.2, from listing 9.20; it is added to have a second
+# test user in order to test for certain actions such as edit requiring
+# the correct user to be logged in
+test2:
+  name: Test2
+  email: test2@gmail.com
+  password_digest: <%= User.digest('password') %>
+  
+# this is added in listing 9.43, and generates 30 extra users to fixture
+# to test pagination; a few extra named users are also defined for use in
+# the test. This also shows how we can use embedded ruby in yml
+michael:
+  name: Michael Example
+  email: michael@example.com
+  password_digest: <%= User.digest('password') %>
+
+archer:
+  name: Sterling Archer
+  email: duchess@example.gov
+  password_digest: <%= User.digest('password') %>
+
+lana:
+  name: Lana Kane
+  email: hands@example.gov
+  password_digest: <%= User.digest('password') %>
+
+mallory:
+  name: Mallory Archer
+  email: boss@example.gov
+  password_digest: <%= User.digest('password') %>
+
+<% 30.times do |n| %>
+user_<%= n %>:
+  name:  <%= "User #{n}" %>
+  email: <%= "user-#{n}@example.com" %>
+  password_digest: <%= User.digest('password') %>
+<% end %>

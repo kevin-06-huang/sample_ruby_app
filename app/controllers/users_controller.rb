@@ -8,7 +8,31 @@ class UsersController < ApplicationController
   # restricted the action with only: so that the before_action would not
   # be performed for methods that does not require it; by default, before
   # apply to every action in a controller
-  before_action :logged_in_user, only: [:edit, :update]
+  
+  # :destroy is added to the logged_in_user before_action in listing 9.53
+  # to ensure that users have to be logged in to delete users
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
+  
+  # this is added from listing 9.22; we added another before action
+  # that called a helper method correct_user; also note that this has
+  # the effect of defining the @user variable, which is why those are
+  # commented out
+  before_action :correct_user, only: [:edit, :update]
+  
+  # added from listing 9.54, we restrict the destroy action to admins;
+  # this make sure that user cannot issue delete request using command
+  # line
+  before_action :admin_user, only: :destroy
+  
+  # this is added in listing 9.32, while also adding index as an action
+  # to the before filer for logged_in_user
+  # listing 9.33 completes it
+  def index
+  # @users = User.all
+    # we replace the previous line with the paginate method to paginate
+    # the index; this is added in listing 9.42
+    @users = User.paginate(page: params[:page])
+  end
   
   # this show method was put in to show the profile of a single user;
   # right now all it really does is set the @user variable to the actual
@@ -62,7 +86,7 @@ class UsersController < ApplicationController
   # added in section 9.1.1, listing 9.1, an edit method that starts off by
   # pulling the relevant user from the database using the params[:id]
   def edit
-    @user = User.find(params[:id])
+  # @user = User.find(params[:id])
   end
   
   # added in 9.1.2, from listing 9.5, this is a user update action for
@@ -70,7 +94,7 @@ class UsersController < ApplicationController
   # the use of user_params method is again, to prevent mass assignment
   # vulnerability
   def update
-    @user = User.find(params[:id])
+  # @user = User.find(params[:id])
     if @user.update_attributes(user_params)
       #my own addition
       flash[:success] = "Profile successfully updated, #{@user.name}"
@@ -89,6 +113,15 @@ class UsersController < ApplicationController
   # controller. the method - called user_params simply returned
   # params[:user] but with only the permitted value to prevent mass
   # security vulnerabilities
+  
+  # added in listing 9.53, this is a destroy
+  def destroy
+    User.find(params[:id]).destroy
+    flash[:success] = "#{params[:name]} deleted."
+    # the user is then redirected to the index
+    redirect_to users_url
+  end
+  
   private
     def user_params
       params.require(:user).permit(:name,
@@ -103,6 +136,10 @@ class UsersController < ApplicationController
     # helper methods are available to all controllers and views
     def logged_in_user
       unless logged_in?
+        # making use of the helper method store_location, defined in
+        # sessions_helper, this is added from listing 9.28
+        store_location
+        
         flash[:danger] = "Please log in."
         # _path are for views because ahrefs are implicitly linked to the
         # current URL, _url is needed for redirect_to and for linking SSL
@@ -113,5 +150,31 @@ class UsersController < ApplicationController
         # seems to work interchangeably fine though
         redirect_to login_url
       end
+    end
+    
+    # added in listing 9.22, to confirm the correct user; also sets the
+    # @user variable
+    def correct_user
+      @user = User.find(params[:id])
+      # because if the actions edit and update were called, there should
+      # already be a logged in user due to the before action before this
+      # is called. the next line simply compare the @user that we got
+      # from the params which remember is basically the part of the url
+      # and part of any update and edit request; if the edit and update
+      # request is for another user, the params and the user found with
+      # params will not match up with the user that is currently logged
+      # in and has an active session; thus a redirect would happen
+      # unless the correct user is present, ie, session user matches up
+      # with the user that is the target of the requested change
+      # this is further modified in listing 9.25, we simply refactor it
+      # to take advantage of a helper method we wronte in sessions_helper
+      redirect_to(root_url) unless current_user?(@user)
+    end
+    
+    # this is added from listing 9.54, similar to other helper methods
+    # above this confirms that the current_user is an admin, and if not
+    # a redirect to root occurs to prevent unauthorized action
+    def admin_user
+      redirect_to(root_url) unless current_user.admin?
     end
 end
