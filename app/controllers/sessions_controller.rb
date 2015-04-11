@@ -11,10 +11,22 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by(email: params[:session][:email].downcase)
     if user && user.authenticate(params[:session][:password])
+      # we again alter this portion of this method from listing 10.30, now
+      # to additionally check for activation
+      if user.activated?
+        log_in user
+        flash[:success] = "Welcome, #{user.name}"
+        params[:session][:remember_me] == '1' ? remember(user) : forget(user)
+        redirect_back_or user
+      else
+        flash[:warning] = "#{user.name}, please activate your account"
+        redirect_to root_url
+      end
+      
       # log the user in and redirect to the user's page
-      log_in user
+   #  log_in user
       # i added this part
-      flash[:success] = "Welcome, #{user.name}"
+   #  flash[:success] = "Welcome, #{user.name}"
       # added in listing 8.34, to remember the user in a cookie. the
       # remember(user) method is defined in sessionshelper
     # remember user
@@ -24,7 +36,7 @@ class SessionsController < ApplicationController
     # else
     #   forget(user)
     # end
-      params[:session][:remember_me] == '1' ? remember(user) : forget(user)
+    # params[:session][:remember_me] == '1' ? remember(user) : forget(user)
       
     # redirect_to user
     
@@ -33,7 +45,7 @@ class SessionsController < ApplicationController
       # to the page user is trying to access before prompt for a login;
       # if there is no such page, the redirect happens to the default page
       # which is passed into the helper method as a parameter
-      redirect_back_or user
+    # redirect_back_or user
       # redirect_to user is automatically converted by rails into the
       # route user_url(user)
     else

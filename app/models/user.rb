@@ -110,11 +110,30 @@ class User < ActiveRecord::Base
   # authenticate method in bcrypt, which compare the password_digest in
   # database and as generated to authenticate user
   # returns true if the given token 
-  def authenticated?(remember_token)
+# def authenticated?(remember_token)
     #listing 8.45, updating authenticated? to handle a nil remember digest
-    return false if remember_digest.nil?
+#   return false if remember_digest.nil?
     
-    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+#   BCrypt::Password.new(remember_digest).is_password?(remember_token)
+# end
+  
+  # added in listing 10.24, and commenting out the previous method, this
+  # is a more generalized version of the authenticated? method so as
+  # to take into account we now have to use authenticated? for activating
+  # a user account as well. Notice that we use the send method along with
+  # string interpolation so that the name of the method for making a
+  # digest can be passed in as an additional parameter and injected into
+  # the method call to call the correct method; we updated the name to
+  # reflect the fact this is now a more generic version. Note also that
+  # we can pass in symbols or string as the parameter for send
+  def authenticated?(attribute, token)
+    digest = send("#{attribute}_digest")
+    return false if digest.nil?
+    # remember all the token and digest uses very similar method; thus
+    # we uses the predefined method in BCrypt that compare the two and
+    # return true if they match and false otherwise, or false if the
+    # digest does not exist
+    BCrypt::Password.new(digest).is_password?(token)
   end
   
   # added in 8.4.3, from listing 8.38, this undo the remember method so
@@ -142,5 +161,17 @@ class User < ActiveRecord::Base
     # update_attribute because this is before user creation and therefore
     # the user does not exist yet in the database
     self.activation_digest = User.digest(activation_token)
+  end
+  
+  # added in listing 10.33, these two helper methods is a refactoring to
+  # clean up the code
+  def activate
+    update_attribute(:activated, true)
+    update_attribute(:activated_at, Time.zone.now)
+  end
+  
+  # sends activation email
+  def send_activation_email
+    UserMailer.account_activation(self).deliver_now
   end
 end

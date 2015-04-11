@@ -31,7 +31,8 @@ class UsersController < ApplicationController
   # @users = User.all
     # we replace the previous line with the paginate method to paginate
     # the index; this is added in listing 9.42
-    @users = User.paginate(page: params[:page])
+    # i also further modified it to only show users that are activated
+    @users = User.where("activated = ?", true).paginate(page: params[:page])
   end
   
   # this show method was put in to show the profile of a single user;
@@ -82,7 +83,8 @@ class UsersController < ApplicationController
       # this is added in listing 10.21; we change the redirect_to to the
       # root_url because now that the account require activation, we can
       # no longer redirect directly to the @user profile
-      UserMailer.account_activation(@user).deliver_now
+    # UserMailer.account_activation(@user).deliver_now
+      @user.send_activation_email
       flash[:info] = "Please check your email to activate your account."
       redirect_to root_url
     else

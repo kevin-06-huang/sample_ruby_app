@@ -71,7 +71,9 @@ module SessionsHelper
       # retrieve the user associated with a particular id from the database
       user = User.find_by(id: user_id)
       # authenticate using the stored remember_token in cookie
-      if user && user.authenticated?(cookies[:remember_token])
+      # we modified the next line in listing 10.26, because we redefined
+      # the authenticated? method to accept two arguments instead of one
+      if user && user.authenticated?(:remember, cookies[:remember_token])
         log_in user
         @current_user = user
       end
