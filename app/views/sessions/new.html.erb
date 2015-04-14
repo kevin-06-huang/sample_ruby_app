@@ -17,6 +17,8 @@
       <%= f.email_field :email, class: 'form-control' %>
 
       <%= f.label :password %>
+      <!-- added from listing 10.38 -->
+      <%= link_to "(forgot password?)", new_password_reset_path %>
       <%= f.password_field :password, class: 'form-control' %>
      <!-- listing 8.47, adding a remember me checkbox --> 
 	<%= f.label :remember_me, class: "checkbox inline" do %>

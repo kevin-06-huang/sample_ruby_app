@@ -1,0 +1,32 @@
+<!-- added from listing 10.50 to change the password upon using a
+	password reset link in a password reset email -->
+
+<% provide(:title, 'Reset password') %>
+<h1>Reset password</h1>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for(@user, url: password_reset_path(params[:id])) do |f| %>
+      <%= render 'shared/error_messages' %>
+
+	  <!-- this is a different line; check it out in listing 10.50.
+	  	this line is simply here to make the email available to the 
+	  	edit action; in the new action that is not an issue because
+	  	the email is the link but this line is required to store
+	  	the value of the email. In essence, we display the information
+	  	on the form without actually showing it and pass it in with
+	  	the form. Also note that we use hidden_field_tag instead of
+	  	f.hidden_field_tag because the email should be in 
+	  	params[:email] rather than params[:user][:email]-->
+      <%= hidden_field_tag :email, @user.email %>
+
+      <%= f.label :password %>
+      <%= f.password_field :password, class: 'form-control' %>
+
+      <%= f.label :password_confirmation, "Confirmation" %>
+      <%= f.password_field :password_confirmation, class: 'form-control' %>
+
+      <%= f.submit "Update password", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>

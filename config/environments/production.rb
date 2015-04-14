@@ -18,7 +18,23 @@ Rails.application.configure do
   # this is enabled in listing 7.27 to configure the application to use
   # ssl in production
   config.force_ssl = true
-
+  # we added this in listing 10.56 to configure the SMTP and to define
+  # a host with the address of the app. Additionally note that we did
+  # not use plain text to store sensitive information
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :smtp
+  host = '<your heroku app>.herokuapp.com'
+  config.action_mailer.default_url_options = { host: host }
+  ActionMailer::Base.smtp_settings = {
+    :address        => 'smtp.sendgrid.net',
+    :port           => '587',
+    :authentication => :plain,
+    :user_name      => ENV['SENDGRID_USERNAME'],
+    :password       => ENV['SENDGRID_PASSWORD'],
+    :domain         => 'heroku.com',
+    :enable_starttls_auto => true
+  }
+  
   config.log_level = :debug
 
   config.i18n.fallbacks = true

@@ -4,7 +4,8 @@ class User < ActiveRecord::Base
   # added in 8.4.1 from listing 8.32, this line simply instantiate and set
   # the remember_token to be accessible from outside the class
   # we also added :activation_token to attr_accessor in listing 10.3
-  attr_accessor :remember_token, :activation_token
+  # we added :reset_token to attr_accessor in listing 10.42
+  attr_accessor :remember_token, :activation_token, :reset_token
     
   # we pust this line in at listing 6.31, ensures email uniqueness before
   # save
@@ -173,5 +174,25 @@ class User < ActiveRecord::Base
   # sends activation email
   def send_activation_email
     UserMailer.account_activation(self).deliver_now
+  end
+  
+  # added from listing 10.42, this is a helper method that sets the
+  # password reset_digest to prepare for password reset
+  def create_reset_digest
+    self.reset_token = User.new_token
+    update_attribute(:reset_digest, User.digest(reset_token))
+    update_attribute(:reset_sent_at, Time.zone.now)
+  end
+  
+  # added from listing 10.42 as well, this method sends password 
+  # reset email out 
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
+  # added from listing 10.53, this method is a helper method to check
+  # if a password reset has expired
+  def password_reset_expired?
+    # this line meant reset is sent at earlier than two hours ago
+    reset_sent_at < 2.hours.ago
   end
 end

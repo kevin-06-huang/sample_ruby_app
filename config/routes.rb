@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'password_resets/new'
+
+  get 'password_resets/edit'
+
   get 'sessions/new'
 
   # this added the root route and also create a root_path
@@ -30,4 +34,9 @@ Rails.application.routes.draw do
   # but only the edit action we included the only: so that only the edit
   # named route would be included
   resources :account_activations, only: [:edit]
+  
+  # this is added from listing 10.37. We need routes for creating new
+  # password resets and for updating them, therefore we need routes for
+  # new, create, edit, and update
+  resources :password_resets, only: [:new, :create, :edit, :update]
 end
