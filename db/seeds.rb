@@ -39,6 +39,12 @@ User.create!(name:  "Kevin Huang",
                activated_at: Time.zone.now)
 end
 
+# this is added from listing 11.24 to generate seed data for micropost
+users = User.order(:created_at).take(6)
+50.times do
+  content = Faker::Lorem.sentence(5)
+  users.each { |user| user.microposts.create!(content: content) }
+end
 # to seed our database, we type in the following command:
 # $ bundle exec rake db:migrate:reset
 # $ bundle exec rake db:seed

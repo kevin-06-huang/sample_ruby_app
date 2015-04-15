@@ -1,6 +1,12 @@
 # this is generated with the following command
 # $ rails generate model User name:string email:string
 class User < ActiveRecord::Base
+  
+  # added from listing 11.10, to set up the one to many relationship
+  # between microposts and users
+  # second part added from listing 11.18
+  has_many :microposts, dependent: :destroy
+  
   # added in 8.4.1 from listing 8.32, this line simply instantiate and set
   # the remember_token to be accessible from outside the class
   # we also added :activation_token to attr_accessor in listing 10.3

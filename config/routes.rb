@@ -39,4 +39,9 @@ Rails.application.routes.draw do
   # password resets and for updating them, therefore we need routes for
   # new, create, edit, and update
   resources :password_resets, only: [:new, :create, :edit, :update]
+  # added in listing 11.29, we only define the create and destroy,
+  # because for micropost the interface will run principally through
+  # the profile and home pages; ie, since we don't need a view for
+  # new and edit page, we also don't need the route for the view
+  resources :microposts, only: [:create, :destroy]
 end
