@@ -14,7 +14,7 @@ class MicropostsController < ApplicationController
       flash[:success] = "Micropost created!"
       redirect_to root_url
     else
-    # @feed_items = []
+      @feed_items = []
       render 'static_pages/home'
     end
   end
@@ -29,8 +29,9 @@ class MicropostsController < ApplicationController
   end
   
   private
+    # modified in listing 11.58 to add picture to the list of permitted
     def micropost_params
-      params.require(:micropost).permit(:content)
+      params.require(:micropost).permit(:content, :picture)
     end
     # added in listing 11.50
     def correct_user
