@@ -201,4 +201,10 @@ class User < ActiveRecord::Base
     # this line meant reset is sent at earlier than two hours ago
     reset_sent_at < 2.hours.ago
   end
+  
+  # this method is added in listing 11.44; the question mark escape
+  # the SQL and prevent a security hole called SQL injection
+  def feed
+    Micropost.where("user_id = ?", id)
+  end
 end

@@ -1,5 +1,9 @@
 <!-- created in listing 11.37 -->
 <%= form_for(@micropost) do |f| %>
+	<!-- this is a line to make use of a more generalized error partial
+		that we defined in listing 11.39; we replaced the @user with
+		a more generalized ruby variable, defined under object: f.object
+		 -->
   <%= render 'shared/error_messages', object: f.object %>
   <div class="field">
     <%= f.text_area :content, placeholder: "Compose new micropost..." %>

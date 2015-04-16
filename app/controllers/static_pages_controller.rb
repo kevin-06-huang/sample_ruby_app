@@ -3,6 +3,9 @@ class StaticPagesController < ApplicationController
     # added in listing 11.38; this is here to define @micropost with
     # association
     @micropost = current_user.microposts.build if logged_in?
+    # added from listing 11.45, this adds a @feed_items instance
+    # variable for the current user's feed
+    @feed_items = current_user.feed.paginate(page: params[:page]) if logged_in?
   end
 
   def help

@@ -8,38 +8,4 @@
   <%= render 'layouts/form' %>
   </div>
 </div>
-<!-- this part is commented out to facilitate the creation of a form partial
-	without affecting the recorded notes
-<% provide(:title, 'Sign up') %>
-<!-- this part is added directly from 7.13; this page of code uses the
-	form_for helper method -->
-<!--
-<h1>Sign up</h1>
 
-<div class="row">
-  <div class="col-md-6 col-md-offset-3">
-    <%= form_for(@user) do |f| %>
-    <!-- this part is added from 7.3.3 and listing 7.18; we added a
-    	partial to display errors when signup failed -->
-<!--      <%= render 'shared/error_messages' %> 
-      
-   <!--   <%= f.label :name %> 
-      <!-- this change add the class form-control so that it can be
-      	automatically styled with bootstrap -->
- <!-- <%= f.text_field :name %> -->
- <!--	  <%= f.text_field :name, class: 'form-control' %>
-
-      <%= f.label :email %>
-      <%= f.email_field :email, class: 'form-control' %>
-
-      <%= f.label :password %>
-      <%= f.password_field :password, class: 'form-control' %>
-
-      <%= f.label :password_confirmation, "Confirmation" %>
-      <%= f.password_field :password_confirmation, class: 'form-control' %>
-
-      <%= f.submit "Create my account", class: "btn btn-primary" %>
-    <% end %>
-  </div>
-</div>
--->

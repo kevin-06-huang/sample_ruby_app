@@ -1,13 +1,17 @@
 <!-- this is created in 7.3.3; note that the rails convention is to
 use a dedicated shared directory for partials expected to be used
 in views across multiple controllers -->
-<% if @user.errors.any? %>
+<!-- we further modified this in listing 11.39 to generalize it so that
+  we can make use of this partial; it now takes a generalized f.object
+  which we defined whenever we use the render at the end -->
+
+<% if object.errors.any? %>
 	<div id="error_explanation">
 		<div class="alert alert-danger">
-			The form contains <%= pluralize(@user.errors.count, "error") %>.
+			The form contains <%= pluralize(object.errors.count, "error") %>.
 		</div>
 		<ul>
-			<% @user.errors.full_messages.each do |msg| %>
+			<% object.errors.full_messages.each do |msg| %>
 				<li>
 					<%= msg %>
 				</li>

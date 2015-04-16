@@ -7,7 +7,7 @@
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <%= form_for(@user, url: password_reset_path(params[:id])) do |f| %>
-      <%= render 'shared/error_messages' %>
+      <%= render 'shared/error_messages', object: f.object %>
 
 	  <!-- this is a different line; check it out in listing 10.50.
 	  	this line is simply here to make the email available to the 
