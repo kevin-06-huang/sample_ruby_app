@@ -23,5 +23,9 @@ module SampleApp2
     # Do not swallow errors in after_commit/after_rollback callbacks.
   # Fog.credentials = { path_style: true }
     config.active_record.raise_in_transactional_callbacks = true
+    # Include the authenticity token in remote forms.
+    # refer to listing 12.36. This is needed for ajax to work in browser
+    # that has javascript disabled
+    config.action_view.embed_authenticity_token_in_remote_forms = true
   end
 end

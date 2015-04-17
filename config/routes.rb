@@ -50,4 +50,6 @@ Rails.application.routes.draw do
   # the profile and home pages; ie, since we don't need a view for
   # new and edit page, we also don't need the route for the view
   resources :microposts, only: [:create, :destroy]
+  # again, listing 12.20
+  resources :relationships, only: [:create, :destroy]
 end

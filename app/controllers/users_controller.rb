@@ -11,7 +11,8 @@ class UsersController < ApplicationController
   
   # :destroy is added to the logged_in_user before_action in listing 9.53
   # to ensure that users have to be logged in to delete users
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy,
+                                        :following, :followers]
   
   # this is added from listing 9.22; we added another before action
   # that called a helper method correct_user; also note that this has
@@ -129,6 +130,20 @@ class UsersController < ApplicationController
     flash[:success] = "#{params[:name]} deleted."
     # the user is then redirected to the index
     redirect_to users_url
+  end
+  
+  # added in listing 12.25
+  def following
+    @title = "Following"
+    @user = User.find(params[:id])
+    @users = @user.following.paginate(page: params[:page])
+    render 'show_follow'
+  end
+  def followers
+    @title = 'Followers'
+    @user = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
   end
   
   private

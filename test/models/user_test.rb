@@ -102,8 +102,8 @@ class UserTest < ActiveSupport::TestCase
   end
   # listing 12.9, testing for following utility
   test "should follow and unfollow a user" do
-    test = users(:test)
-    test2 = users(:test2)
+    test = users(:michael)
+    test2 = users(:archer)
     # following? is a helper method we defined in model/user.rb
     assert_not test.following?(test2)
     test.follow(test2)
