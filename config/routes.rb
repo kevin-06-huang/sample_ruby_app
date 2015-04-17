@@ -25,7 +25,13 @@ Rails.application.routes.draw do
   # added in 7.1.2 to turn users into resources in order to use the
   # REST architecture and the named routes; refer to table 7.1 to see
   # all the named route that is added by default
-  resources :users
+  # modified in listing 12.15 to take into account the following and
+  # followers resource
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
   # we can see a full list of the routes for the applications, including
   # the named routes, using $ bundle exec rake routes
   

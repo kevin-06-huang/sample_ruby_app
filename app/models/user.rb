@@ -7,6 +7,20 @@ class User < ActiveRecord::Base
   # second part added from listing 11.18
   has_many :microposts, dependent: :destroy
   
+  # implemented from listing 12.2, this set up the many-to-many
+  # association between follower and followed; note the use of an
+  # independent model relationship
+  has_many :active_relationships, class_name: "Relationship",
+                                  foreign_key: "follower_id",
+                                  dependent: :destroy
+  # added in listing 12.12; we simply implement the passive_relationships
+  # which are analogous to active_relationships
+  has_many :passive_relationships, class_name: "Relationship",
+                                   foreign_key: "followed_id",
+                                   dependent: :destroy
+  # we override the default followed because of the awkward pluralization
+  has_many :following, through: :active_relationships, source: :followed
+  has_many :followers, through: :passive_relationships
   # added in 8.4.1 from listing 8.32, this line simply instantiate and set
   # the remember_token to be accessible from outside the class
   # we also added :activation_token to attr_accessor in listing 10.3
@@ -206,5 +220,17 @@ class User < ActiveRecord::Base
   # the SQL and prevent a security hole called SQL injection
   def feed
     Micropost.where("user_id = ?", id)
+  end
+  # added from listing 12.10
+  def follow(other_user)
+    active_relationships.create(followed_id: other_user.id)
+  end
+  def unfollow(other_user)
+    active_relationships.find_by(followed_id: other_user.id).destroy
+  end
+  # include? is a predefined method that is automatically created because
+  # of the association we put in
+  def following?(other_user)
+    following.include?(other_user)
   end
 end
