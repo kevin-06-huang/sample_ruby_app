@@ -218,8 +218,17 @@ class User < ActiveRecord::Base
   
   # this method is added in listing 11.44; the question mark escape
   # the SQL and prevent a security hole called SQL injection
+  # we further modified the feed to produce a final updated version that
+  # included the followed feeds
   def feed
-    Micropost.where("user_id = ?", id)
+    # following_ids is a method predefined by rails; it takes the list of
+    # following and convert them to an array of ids refer to 12.3.2
+    # further modified in listing 12.46 to push the set logic into the
+    # database
+    following_ids = "SELECT followed_id FROM relationships
+                     WHERE  follower_id = :user_id"
+    Micropost.where("user_id IN (#{following_ids})
+                     OR user_id = :user_id", user_id: id)
   end
   # added from listing 12.10
   def follow(other_user)

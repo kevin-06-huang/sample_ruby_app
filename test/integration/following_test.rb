@@ -5,7 +5,8 @@ require 'test_helper'
 class FollowingTest < ActionDispatch::IntegrationTest
   # added from listing 12.28
   def setup
-    @user = users(:test)
+    @user = users(:michael)
+    @user2 = users(:lana)
     log_in_as(@user)
   end
   
@@ -29,6 +30,34 @@ class FollowingTest < ActionDispatch::IntegrationTest
     assert_match @user.followers.count.to_s, response.body
     @user.followers.each do |user|
       assert_select "a[href=?]", user_path(user)
+    end
+  end
+  
+  # added from listing 12.39
+  test "should follow a user the html way" do
+    assert_difference "@user.following.count", 1 do
+      post relationships_path, followed_id: @user2.id
+    end
+  end
+  
+  test "should follow a user with ajax" do
+    assert_difference "@user.following.count", 1 do
+      xhr :post, relationships_path, followed_id: @user2.id
+    end
+  end
+  
+  test "should unfollow a user the standard way" do
+    @user.follow(@user2)
+    relationship = @user.active_relationships.find_by(followed_id: @user2.id)
+    assert_difference "@user.following.count", -1 do
+      delete relationship_path(relationship)
+    end
+  end
+  test "should unfollow a user with ajax" do
+    @user.follow(@user2)
+    relationship = @user.active_relationships.find_by(followed_id: @user2.id)
+    assert_difference "@user.following.count", -1 do
+      xhr :delete, relationship_path(relationship)
     end
   end
 end
