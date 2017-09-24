@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails',                   '4.2.0'
+gem 'rails'
 gem 'bcrypt',                  '3.1.7'
 gem 'faker',                   '1.4.2'
 gem 'carrierwave',             '0.10.0'
@@ -15,6 +15,8 @@ gem 'coffee-rails',            '4.1.0'
 gem 'jquery-rails',            '4.0.3'
 gem 'turbolinks',              '2.3.0'
 gem 'jbuilder',                '2.2.3'
+gem 'net-ssh'
+gem 'xmlrpc'
 gem 'sdoc',                    '0.4.0', group: :doc
 
 group :development, :test do
